@@ -6,13 +6,15 @@ namespace OnlineShopCMSMySql
     {
         static void Main(string[] args)
         {
-            ICustomerRepository product = new CustomerRespository();
+            Login login = new Login();
+            login.GetAccess();
 
+            IProductRepository product = new ProductRespository();
             {
                 bool showMenu = true;
                 while (showMenu)
                 {
-                    showMenu = CustomerController.MainMenu(product);
+                    showMenu = ProductController.MainMenu(product);
                 }
             }
 
