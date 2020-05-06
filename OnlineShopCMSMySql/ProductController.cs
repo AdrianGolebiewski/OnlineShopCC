@@ -28,6 +28,11 @@ namespace OnlineShopCMSMySql
                         Console.ResetColor();
                         Console.WriteLine();
                     }
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("Product has been added");
+                    Console.ResetColor();
+                    Console.WriteLine();
                     return true;
                 case "5":
                     Console.Clear();
@@ -43,6 +48,11 @@ namespace OnlineShopCMSMySql
                         Console.ResetColor();
                         Console.WriteLine();
                     }
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("Product has been removed");
+                    Console.ResetColor();
+                    Console.WriteLine();
                     return true;
                 case "6":
                     Console.Clear();
@@ -58,6 +68,11 @@ namespace OnlineShopCMSMySql
                         Console.ResetColor();
                         Console.WriteLine();
                     }
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("Product has been updated");
+                    Console.ResetColor();
+                    Console.WriteLine();
                     return true;
                 case "2":
                     Console.Clear();

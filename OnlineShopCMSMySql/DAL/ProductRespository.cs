@@ -43,7 +43,7 @@ namespace OnlineShopCMSMySql.DAL
  
             if (rowsAffected > 0)
             {
-                return true; 
+                return true;;
             }
             return false;
         }
