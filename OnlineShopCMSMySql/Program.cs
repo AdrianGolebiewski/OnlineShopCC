@@ -11,10 +11,9 @@ namespace OnlineShopCMSMySql
 
             IProductRepository product = new ProductRespository();
             {
-                bool showMenu = true;
-                while (showMenu)
+                for(; ;)
                 {
-                    showMenu = ProductController.MainMenu(product);
+                    ProductController.MainMenu(product);
                 }
             }
 

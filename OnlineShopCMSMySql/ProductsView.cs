@@ -31,16 +31,19 @@ namespace OnlineShopCMSMySql
                                   $"{product.quantity, -5} | {product.description, 5} | {product.product_index, -7}");
             }
             Console.WriteLine();
-            pressAnyKey();
+            // pressAnyKey();
         }
 
         public static void printOne(Products product)
         {
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("    id | category   | manufact   | color      | size | price  | qty   | desc  | index");
+            Console.ResetColor();
             Console.WriteLine($" {product.product_id,5} | {product.category,-10} | {product.manufacturer,-10} | {product.color,-10} | {product.size,-4} | {product.price,-6} | " +
                               $"{product.quantity,-5} | {product.description,5} | {product.product_index,-7}");
 
             Console.WriteLine();
-            pressAnyKey();
+            // pressAnyKey();
         }
 
         public static void pressAnyKey()

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Channels;
 using OnlineShopCMSMySql.DAL;
+
 
 namespace OnlineShopCMSMySql
 {
@@ -13,60 +16,132 @@ namespace OnlineShopCMSMySql
             {   
                 case "4":
                     Console.Clear();
-                    product.AddProduct(getProductInput());
+                    try
+                    {
+                        product.AddProduct(getProductInput());
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "5":
                     Console.Clear();
-                    product.DeleteProduct(getId());
+                    try
+                    {
+                        product.DeleteProduct(getId());
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "6":
                     Console.Clear();
-                    product.UpdateProduct(getProductInput());
+                    try
+                    {
+                        product.UpdateProduct(getProductInput());
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "2":
                     Console.Clear();
-                    ProductsView.printList(product.GetFewProducts(getAmount()));
+                    try
+                    {
+                        ProductsView.printList(product.GetFewProducts(getAmount()));
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "1":
                     Console.Clear();
-                    ProductsView.printList(product.GetAllProducts());
+                    try
+                    {
+                        ProductsView.printList(product.GetAllProducts());
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "3":
                     Console.Clear();
-                    ProductsView.printOne(product.GetSingleProduct(getId()));
+                    try
+                    {
+                        ProductsView.printOne(product.GetSingleProduct(getId()));
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong value !");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
                     return true;
                 case "7":
-                   return false;
-                default:
-                    Console.WriteLine("There is no such choice");
+                    Console.Clear();
+                    Environment.Exit(7);
                     return true;
+                default:
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("There is no such choice");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                    return false;
             }
         }
-                static Products getProductInput()
-                {
-                    Console.Write("Product Id: ");
-                    int _product_id = Convert.ToInt16(Console.ReadLine());
-                    Console.Write("Category: ");
-                    string _category = Console.ReadLine();
-                    Console.Write("Manufacturer: ");
-                    string _manufacturer = Console.ReadLine();
-                    Console.Write("Color: ");
-                    string _color = Console.ReadLine();
-                    Console.Write("Size: ");
-                    string _size = Console.ReadLine();
-                    Console.Write("Price: ");
-                    float _price = float.Parse(Console.ReadLine());
-                    Console.Write("Quantity: ");
-                    int _quantity = int.Parse(Console.ReadLine());
-                    Console.Write("Description: ");
-                    string _description = Console.ReadLine();
-                    Console.Write("Products index: ");
-                    string _product_index = Console.ReadLine();
-                
-                    var prod = new Products(_product_id, _category, _manufacturer, _color, _size, _price, _quantity, _description, _product_index);
 
-                    return prod;
-            
+        static Products getProductInput()
+        {
+            Console.Write("Product Id: ");
+            int _product_id = Convert.ToInt16(Console.ReadLine());       
+            Console.Write("Category: ");
+            string _category = Console.ReadLine();
+            Console.Write("Manufacturer: ");
+            string _manufacturer = Console.ReadLine();
+            Console.Write("Color: ");
+            string _color = Console.ReadLine();
+            Console.Write("Size: ");
+            string _size = Console.ReadLine();
+            Console.Write("Price: ");
+            float _price = float.Parse(Console.ReadLine());
+            Console.Write("Quantity: ");
+            int _quantity = int.Parse(Console.ReadLine());
+            Console.Write("Description: ");
+            string _description = Console.ReadLine();
+            Console.Write("Products index: ");
+            string _product_index = Console.ReadLine();
+                
+            var prod = new Products(_product_id, _category, _manufacturer, _color, _size, _price, _quantity, _description, _product_index);
+
+            return prod;    
         }
 
         static int getId()
@@ -76,19 +151,19 @@ namespace OnlineShopCMSMySql
             return productId;
         }
 
-        static string getAmount()
+        static int getAmount()
         {
             Console.Write("Amount: ");
-            string amount = Console.ReadLine();
+            int amount = int.Parse(Console.ReadLine());
             return amount;
         }
-
+        /*
         static string getSort()
         {
             Console.Write("Sort: ");
             string sort = Console.ReadLine();
             return sort;
         }
-
+        */
     }
 }

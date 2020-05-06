@@ -32,7 +32,7 @@ namespace OnlineShopCMSMySql.DAL
             return _db.Query<Products>($"SELECT product_id, category, manufacturer, color, size, price, quantity, description, product_index FROM Products WHERE product_id = @product_id", new { product_id = productId }).SingleOrDefault();
         }
 
-        List<Products> IProductRepository.GetFewProducts(string amount)
+        List<Products> IProductRepository.GetFewProducts(int amount)
         {
             return this._db.Query<Products>($"SELECT product_id, category, manufacturer, color, size, price, quantity, description, product_index FROM Products LIMIT {amount}").ToList();
         }
