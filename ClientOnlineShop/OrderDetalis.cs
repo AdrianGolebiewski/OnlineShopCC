@@ -17,10 +17,7 @@ namespace ClientOnlineShop
         public float price { get; set; }
         public int quantity { get; set; }
 
-        public OrderDetalis()
-        {
-            
-        }
+       
 
         public OrderDetalis(UInt64 orderId, int productId, int Amount)
         {
@@ -63,6 +60,14 @@ namespace ClientOnlineShop
             this.Amount = Amount;
 
         }
+
+        public OrderDetalis(UInt64 OrderId)
+        {
+
+            this.OrderId = OrderId;
+
+        }
+
 
     }
 }

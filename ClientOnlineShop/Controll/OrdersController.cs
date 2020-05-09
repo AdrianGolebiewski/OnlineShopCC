@@ -8,9 +8,9 @@ namespace ClientOnlineShop
 {
     public static class OrdersController
     {
-        private static int CustomerId;
-        private static UInt64 OrderId;
-        private static float TotalPrice;
+        private static int CustomerId { get; set;}
+        private static UInt64 OrderId { get; set; }
+        private static float TotalPrice { get; set;}
 
 
         internal static bool MainMenu(IOrdersRepository order, IProductsRepository product, IOrderDetalisRepository orderDetalis)
@@ -30,7 +30,7 @@ namespace ClientOnlineShop
                     Console.Clear();
                     ProductsView.printList(product.GetAllProducts());
                     bool ProductInBase = true;
-                    var addorder = new OrderDetalis();
+                    var addorder = new OrderDetalis(OrderId);
                     while (ProductInBase)
                     {
                         addorder = GetInput();
