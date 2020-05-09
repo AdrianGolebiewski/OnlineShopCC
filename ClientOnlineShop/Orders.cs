@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClientOnlineShop
 {
@@ -9,7 +7,9 @@ namespace ClientOnlineShop
         public UInt64 OrderId { get; set; }
         public int CustomerId { get; set; }
         public string OrderDate { get; set; }
-     
+        public int Status { get; set; }
+
+
         public Orders(int customerId)
         {
             
@@ -25,7 +25,15 @@ namespace ClientOnlineShop
 
         }
 
-        
+        public Orders()
+        {
+
+           
+
+
+        }
+
+
 
     }
 }

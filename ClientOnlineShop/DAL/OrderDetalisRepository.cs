@@ -51,12 +51,12 @@ namespace ClientOnlineShop.DAL
 
         }
 
-        bool IOrderDetalisRepository.UpdatePrice(OrderDetalis ourProducts)
+        bool IOrderDetalisRepository.UpdatePrice(OrderDetalis ourOrder)
         {
             
-            var price = this._db.Query<Products>("SELECT price FROM `Products` WHERE product_id =" + ourProducts.product_id).SingleOrDefault(); 
+            var price = this._db.Query<Products>("SELECT price FROM `Products` WHERE product_id =" + ourOrder.product_id).SingleOrDefault(); 
           
-            int rowsAffected = this._db.Execute($"UPDATE OrderDetalis SET UnitePrice = '{price.price}' * Amount WHERE OrderID = " + ourProducts.OrderId, ourProducts);
+            int rowsAffected = this._db.Execute($"UPDATE OrderDetalis SET UnitePrice = '{price.price}' * Amount WHERE OrderID = " + ourOrder.OrderId, ourOrder);
 
             if (rowsAffected > 0)
             {
@@ -64,5 +64,19 @@ namespace ClientOnlineShop.DAL
             }
             return false;
         }
+        OrderDetalis IOrderDetalisRepository.GetCurrentAmount(OrderDetalis ourOrder)
+        {
+
+            return this._db.Query<OrderDetalis>($"SELECT Amount, product_id  FROM OrderDetalis WHERE product_id = '{ourOrder.product_id}' AND OrderID = " + ourOrder.OrderId, ourOrder).SingleOrDefault();
+
+        }
+
+        UInt64[] IOrderDetalisRepository.IsAnyProductInBase(UInt64 orderId)
+        {
+
+            return this._db.Query<UInt64>($"SELECT * FROM OrderDetalis WHERE OrderID = '{orderId}' ").ToArray();
+
+        }
+
     }
 }

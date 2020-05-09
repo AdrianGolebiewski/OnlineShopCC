@@ -48,14 +48,16 @@ namespace ClientOnlineShop.DAL
             return false;
         }
 
-        bool IOrdersRepository.UpdateOrder(Orders ourProducts)
+        bool IOrdersRepository.UpdateOrder(Orders ourOrder)
         {
-           // int rowsAffected = this._db.Execute("UPDATE Products SET category = @category, manufacturer = @manufacturer, color = @color, size = @size, price = @price, quantity = @quantity, description = @description, product_index = @product_index WHERE product_id = " + ourProducts.product_id, ourProducts);
+          int rowsAffected = this._db.Execute("UPDATE Orders SET Status = @status WHERE OrderID = " + ourOrder.OrderId, ourOrder);
 
-          //  if (rowsAffected > 0)
-          //  {
-          //      return true;
-          //  }
+            
+           
+            //  if (rowsAffected > 0)
+            //  {
+            //      return true;
+            //  }
             return false;
         }
 

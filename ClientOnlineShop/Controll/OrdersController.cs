@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using ClientOnlineShop.DAL;
 
 namespace ClientOnlineShop
 {
-     public static class OrdersController
-    { 
+    public static class OrdersController
+    {
         private static int CustomerId;
         private static UInt64 OrderId;
+        private static float TotalPrice;
 
 
         internal static bool MainMenu(IOrdersRepository order, IProductsRepository product, IOrderDetalisRepository orderDetalis)
@@ -16,15 +18,31 @@ namespace ClientOnlineShop
         {
             Console.Clear();
             OrdersView.PrintMenu(CustomerId, OrderId);
-            
+
             switch (Console.ReadLine())
-            {   
+            {
                 case "6":
+                    order.UpdateOrder(UpdateStatus(1));
+                    GetIdAndAmount(orderDetalis.GetAllOrdersDetalis(OrderId), product);
                     GetNewOrderInput(order);
                     return true;
                 case "1":
+                    Console.Clear();
                     ProductsView.printList(product.GetAllProducts());
-                    var addorder = GetOrderDetalis();
+                    bool ProductInBase = true;
+                    var addorder = new OrderDetalis();
+                    while (ProductInBase)
+                    {
+                        addorder = GetInput();
+                        if (IsProductIdInBase(product, addorder))
+                        {
+                            ProductInBase = CheckLessThanZero(product, addorder);
+                        }
+                        else
+                        {
+                            ProductInBase = true;
+                        }
+                    }
                     if (orderDetalis.AddOrderDetalis(addorder) == true)
                     {
                         OrdersView.AddedSuccessfully();
@@ -34,21 +52,45 @@ namespace ClientOnlineShop
                     orderDetalis.UpdatePrice(addorder);
                     return true;
                 case "2":
+                    Console.Clear();
                     GetOrderList(orderDetalis);
+                    OrdersView.PressAnyKey();
                     return true;
                 case "3":
-                    GetOrderList(orderDetalis);
-                    var updateDetalis = GetOrderDetalis();
-                    orderDetalis.UpdateOrderDetalis(updateDetalis);
-                    orderDetalis.UpdatePrice(updateDetalis);
+                    if (!IsAnyProductInBase(orderDetalis))
+                    {
+                        Console.WriteLine("Buy something first");
+                        OrdersView.PressAnyKey();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        GetOrderList(orderDetalis);
+                        var updateDetalis = GetInput();
+                        var amount = orderDetalis.GetCurrentAmount(updateDetalis);
+                        product.UpdateProductUp(amount);
+                        orderDetalis.UpdateOrderDetalis(updateDetalis);
+                        orderDetalis.UpdatePrice(updateDetalis);
+                        var updateAmount = new Products(updateDetalis.product_id, updateDetalis.Amount);
+                        product.UpdateProduct(updateAmount);
+                        return true;
+                    }
                     return true;
                 case "4":
+                    GetIdAndAmount(orderDetalis.GetAllOrdersDetalis(OrderId), product);
                     orderDetalis.DeleteOrderDetalis(OrderId);
                     return true;
                 case "5":
-                    //?
+                    bool showMenu = true;
+                    while (showMenu)
+                    {
+                        showMenu = getPay(order);
+                    }
+                    return true;
                 case "0":
-                   return false;
+                    GetIdAndAmount(orderDetalis.GetAllOrdersDetalis(OrderId), product);
+                    order.UpdateOrder(UpdateStatus(1));
+                    return false;
                 default:
                     Console.WriteLine("There is no such choice");
                     OrdersView.PressAnyKey();
@@ -75,11 +117,11 @@ namespace ClientOnlineShop
                     bool showMenu = true;
                     while (showMenu)
                     {
-                        MainMenu(order, product, orderDetalis);
-                    }                  
+                        showMenu = MainMenu(order, product, orderDetalis);
+                    }
                     return true;
-                case "4":
-                   return false;
+                case "0":
+                    return false;
                 default:
                     Console.WriteLine("There is no such choice");
                     OrdersView.PressAnyKey();
@@ -96,25 +138,43 @@ namespace ClientOnlineShop
             CustomerId = _order.CustomerId;
             var _orderId = order.GetOrderId(CustomerId);
             OrderId = _orderId.OrderId;
-            
-
         }
-        static OrderDetalis GetOrderDetalis()
-        {   
-           Console.Write("Product Id: ");
-           int productId = Convert.ToInt32(Console.ReadLine());
-           Console.Write("Quantity: ");
-           int quantity = Convert.ToInt32(Console.ReadLine());
-           var orderDetalis = new OrderDetalis(OrderId, productId, quantity);
 
-           return orderDetalis;
+        static OrderDetalis GetInput()
+        {
+            bool IsCorrect = true;
+            while (IsCorrect == true)
+            {
+                Console.Write("Product Id: ");
+                var ProductIdString = Console.ReadLine();
+                Console.Write("Amount: ");
+                var QuantityString = Console.ReadLine();
+                int ProductId;
+                bool parseSuccess = int.TryParse(ProductIdString, out ProductId);
+                bool parseSuccessTwo = int.TryParse(QuantityString, out int Quantity);
+
+                if (parseSuccess & parseSuccessTwo)
+                {
+                    var orderDetalis = new OrderDetalis(OrderId, ProductId, Quantity);
+                    return orderDetalis;
+                }
+                else
+                {
+                    Console.WriteLine("This is not a number, try again!");
+                    IsCorrect = true;
+                    continue;
+                }
+
+            }
+
+            return null;
         }
         static float GetAllPrice(List<OrderDetalis> list)
         {
             float AllPrice = 0;
             foreach (var product in list)
             {
-                AllPrice = product.UnitPrice;
+                AllPrice = AllPrice + product.UnitPrice;
             }
             return AllPrice;
         }
@@ -122,9 +182,77 @@ namespace ClientOnlineShop
         static void GetOrderList(IOrderDetalisRepository orderDetalis)
         {
             List<OrderDetalis> allOrders = orderDetalis.GetAllOrdersDetalis(OrderId);
-            OrderDetalisView.printList(allOrders, GetAllPrice(allOrders));
+            TotalPrice = GetAllPrice(allOrders);
+            OrderDetalisView.printList(allOrders, TotalPrice);
+            
         }
-        
-        
+
+        static void GetIdAndAmount(List<OrderDetalis> allOrders, IProductsRepository product)
+        {
+            foreach (var order in allOrders)
+            {
+                product.UpdatePriceWhenDelete(order.product_id, order.Amount);
+            }
+        }
+
+        static Orders UpdateStatus(int statusValue)
+        {
+            var status = new Orders();
+            status.Status = statusValue;
+            status.OrderId = OrderId;
+            return status;
+        }
+
+        static bool getPay(IOrdersRepository order)
+        {
+            Console.WriteLine($"Do you want to pay {TotalPrice} y/n");
+
+            switch (Console.ReadLine())
+            {
+                case "y":
+                    order.UpdateOrder(UpdateStatus(2));
+                    GetNewOrderInput(order);
+                    return false;
+                case "n":
+                    return false;
+                default:
+                    Console.WriteLine("There is no such choice");
+                    OrdersView.PressAnyKey();
+                    return true;
+
+            }
+        }
+        static bool IsProductIdInBase(IProductsRepository product, OrderDetalis product_id)
+        {
+            if (!product.GetAllProductId().Contains(product_id.product_id))
+            {
+                Console.WriteLine("There is no such id in base, try again!");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+           
+        }
+        static bool CheckLessThanZero(IProductsRepository product, OrderDetalis order )
+        {
+            if (Int32.Parse(product.GetAmount(order)) - order.Amount < 0)
+            {
+                Console.WriteLine("We don't have enough items in stock change amount");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static bool IsAnyProductInBase(IOrderDetalisRepository orderDetalis)
+        {
+            return orderDetalis.IsAnyProductInBase(OrderId).Contains(OrderId);
+        }
     }
+
 }

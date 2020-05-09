@@ -17,6 +17,10 @@ namespace ClientOnlineShop
         public float price { get; set; }
         public int quantity { get; set; }
 
+        public OrderDetalis()
+        {
+            
+        }
 
         public OrderDetalis(UInt64 orderId, int productId, int Amount)
         {
@@ -32,6 +36,13 @@ namespace ClientOnlineShop
             this.product_id = productId;
            
         }
+
+        public OrderDetalis(Int32 productId, UInt64 OrderId)
+        {
+
+            this.product_id = productId;
+
+        }
         public OrderDetalis(int product_id, float unitePrice, int amount, string category, string color, string size, float price, string manufacturer)
         {
 
@@ -45,6 +56,13 @@ namespace ClientOnlineShop
             this.manufacturer = manufacturer;
 
     }
+        public OrderDetalis(int Amount, int product_id)
+        {
+
+            this.product_id = product_id;
+            this.Amount = Amount;
+
+        }
 
     }
 }

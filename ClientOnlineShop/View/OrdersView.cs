@@ -19,10 +19,10 @@ namespace ClientOnlineShop
                 Console.WriteLine("1)  Add products to my order");
                 Console.WriteLine("2)  Show my order");
                 Console.WriteLine("3)  Update my order");
-                Console.WriteLine("4)  Delete my order");
+                Console.WriteLine("4)  Reset to 0 my order");
                 Console.WriteLine("5)  Go pay");
                 Console.WriteLine("6)  Create new order");
-                Console.WriteLine("0)  Exit");
+                Console.WriteLine("0)  Abandon your orders");
                 Console.Write("\r\nSelect an option: ");
         }
         public static void CreateOrderMenu()
@@ -32,13 +32,13 @@ namespace ClientOnlineShop
             Console.WriteLine("1)  I want to register to 'Shop Online'");
             Console.WriteLine("2)  I have login to 'Shop Online'");
             Console.WriteLine("3)  I don't need a login (guest mode)");
-            Console.WriteLine("4)  Exit");
+            Console.WriteLine("0)  Exit");
             Console.Write("\r\nSelect an option: ");
         }
 
         public static void PressAnyKey()
         {
-            Console.WriteLine("Press any key to return to main menu");
+            Console.WriteLine("Press any key");
             Console.ReadLine();
         }
         public static void NotImplementedYet()
