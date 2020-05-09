@@ -133,7 +133,7 @@ namespace OnlineShopCMSMySql
             }
         }
 
-        static Products getProductInput()
+        public static Products getProductInput()
         {
             Console.Write("Product Id: ");
             int _product_id = Convert.ToInt16(Console.ReadLine());       
@@ -159,14 +159,14 @@ namespace OnlineShopCMSMySql
             return prod;    
         }
 
-        static int getId()
+        public static int getId()
         {
             Console.Write("ID: ");
             int productId = Convert.ToInt32(Console.ReadLine());
             return productId;
         }
 
-        static int getAmount()
+        public static int getAmount()
         {
             Console.Write("Amount: ");
             int amount = int.Parse(Console.ReadLine());
